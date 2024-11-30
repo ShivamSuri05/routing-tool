@@ -1,0 +1,4 @@
+List of all the python dependencies required
+1. pip install osmnx
+2. pip install networkx
+3. pip install numpy

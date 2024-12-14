@@ -1,6 +1,6 @@
 import osmnx as ox
 
-def save_graph_sample(graph, filepath):  # give the filepath in the format: filepath="./data/GraphName.gpkg"
+def save_graph_sample(graph, filepath):  # give the filepath in the format: filepath="./data/GraphName.graphml"
     
     try:
         # Save the graph to a graphml file

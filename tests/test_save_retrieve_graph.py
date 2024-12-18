@@ -2,12 +2,13 @@ import osmnx as ox
 import os
 import networkx as nx
 from functions.save_retrieve_graph import save_graph_sample, use_saved_graph_sample
+from functions.get_graph import get_graph_from_place
 
 # Define the place name and the file path
 place_name = "Nieder-Weisel, Germany"
-G = ox.graph_from_place(place_name, network_type="drive")
+G = get_graph_from_place(place_name)
 
-valid_filepath = "valid_directory/test.graphml"
+valid_filepath = "test_directory/test.graphml"
 os.makedirs(os.path.dirname(valid_filepath), exist_ok=True)
 
 try:
@@ -22,9 +23,9 @@ try:
         print("Graph could not be loaded.")
     
 finally:
-    # Clean up: Delete the test file if it exists
+    # Clean up: Not Delete the test file if it exists
     if os.path.exists(valid_filepath):
-        os.remove(valid_filepath)
-        print(f"File {valid_filepath} has been deleted.")
+        #os.remove(valid_filepath)
+        print(f"File {valid_filepath} has not been deleted for safety.")
     else:
         print(f"File {valid_filepath} does not exist.")

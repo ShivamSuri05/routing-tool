@@ -1,3 +1,5 @@
+import math
+
 def encode_coordinates(latitude, longitude):
     if(latitude==None or longitude==None):
         print("Please provide both latitude and longitude values")
@@ -17,3 +19,45 @@ def decode_coordinates(string):
     else:
         print("Invalid Data type::Supported Data type=string")
         return
+
+def generate_nearby_points(latitude, longitude, distance_m):
+  meters_per_degree_lat = 111320
+  meters_per_degree_lon = 111320 * math.cos(math.radians(latitude))
+
+  delta_lat = distance_m / meters_per_degree_lat
+  delta_lon = distance_m / meters_per_degree_lon
+
+  return [(latitude + delta_lat, longitude), (latitude - delta_lat, longitude), (latitude, longitude + delta_lon),(latitude, longitude - delta_lon)]
+
+  def get_unique_nearest_edges(edge_list):
+    return set(edge_list)
+
+def get_assumed_nearest_edges(uniq_edge_list, edge):
+    return list(uniq_edge_list-set([edge]))
+
+def add_update_json_object(start_node, end_node, height, oneway_flag, real_flag, dict_object):
+    key = f"{start_node},{end_node}"
+    if key not in dict_object:
+        dict_object[key] = {
+            "real_height": 10000,
+            "assumed_height": 10000,
+            "all_heights": [],
+            "oneway": oneway_flag
+        }
+
+    dict_object[key]["all_heights"].append(height)
+
+    if(real_flag == True):
+        dict_object[key]["real_height"] = min(height, dict_object[key]["real_height"])
+    else:
+        dict_object[key]["assumed_height"] = min(height, dict_object[key]["assumed_height"])
+
+def add_to_map(s_lat, s_long, nearest_start_node, nearest_end_node, si_os_map):
+    key = f"{s_lat},{s_long}"
+    value = f"{nearest_start_node},{nearest_end_node}"
+    si_os_map[key] = [value]
+
+def update_to_map(s_lat, s_long, nearest_start_node, nearest_end_node, si_os_map):
+    key = f"{s_lat},{s_long}"
+    value = f"{nearest_start_node},{nearest_end_node}"
+    si_os_map[key].append(value)

@@ -5,6 +5,10 @@
 <li>Install all the dependencies mentioned in requirements.txt file</li>
 <li>Run this command and check if you get the welcome message.<br><ul>python src/main.py</ul></li>
 
+<h2>Steps to run the backend server</h2>
+<li>pip install flask (only once)</li>
+<li>python app.js</li>
+
 
 <h2>Steps to run files individually for testing</h2>
 <li>Go to parent directory of your project. It should be something like xxxxxx/routing-tool</li>

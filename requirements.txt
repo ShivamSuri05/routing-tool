@@ -5,4 +5,4 @@ List of all the python dependencies required
 4. pip install geopandas shapely matplotlib
 5. pip install scikit-learn
 6. pip install geopy
- 
+7. pip install flask 

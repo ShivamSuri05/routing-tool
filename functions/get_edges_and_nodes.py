@@ -33,8 +33,8 @@ def get_data_from_place(place_name):
         print(f"An error occurred: {e}")
         return None
 
-def get_nearest_edge(graph, latitude, longitude):
-    nearest_edge = ox.distance.nearest_edges(graph, X=longitude, Y=latitude)
+def get_nearest_edge(graph, latitude, longitude, dist=False):
+    nearest_edge = ox.distance.nearest_edges(graph, X=longitude, Y=latitude, return_dist=dist)
     return nearest_edge
 
 def get_nearest_edge_data(graph, start_node, end_node):

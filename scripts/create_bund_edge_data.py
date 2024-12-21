@@ -11,9 +11,10 @@ def create_bund_edge_database():
     graph_filepath = "data/germany.graphml"
     graph = use_saved_graph_sample(graph_filepath)
     bund_obj = {}
-    start_idx = 0  # Example start index
-    end_idx = 10
+    start_idx = 10000  # Example start index
+    end_idx = 16000
     bd_os_map = {}
+    print(f"File will be saved to:: data/edges_and_bridges_{start_idx}-{end_idx}.json")
     for row in b_data.iloc[start_idx:end_idx].itertuples():
         print(f"Processing row:",row.Index)
         add_bund_in_edge(

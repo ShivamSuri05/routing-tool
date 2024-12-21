@@ -57,9 +57,9 @@ def add_update_b_data_object(start_node, end_node, b_data, oneway_flag, real_fla
     if key not in dict_object:
         dict_object[key] = {
             "condition_score": 0,
-            "load_index": 10,
+            "load_index": 0,
             "assumed_condition_score": 0,
-            "assumed_load_index": 10,
+            "assumed_load_index": 0,
             "all_condition_score": [],
             "all_load_index": [],
             "all_type": [],
@@ -72,10 +72,10 @@ def add_update_b_data_object(start_node, end_node, b_data, oneway_flag, real_fla
 
     if(real_flag == True):
         dict_object[key]["condition_score"] = max(b_data["condition_score"], dict_object[key]["condition_score"])
-        dict_object[key]["load_index"] = min(b_data["load_index"], dict_object[key]["load_index"])
+        dict_object[key]["load_index"] = max(b_data["load_index"], dict_object[key]["load_index"])
     else:
         dict_object[key]["assumed_condition_score"] = max(b_data["condition_score"], dict_object[key]["assumed_condition_score"])
-        dict_object[key]["assumed_load_index"] = min(b_data["load_index"], dict_object[key]["assumed_load_index"])
+        dict_object[key]["assumed_load_index"] = max(b_data["load_index"], dict_object[key]["assumed_load_index"])
 
 def add_to_map(s_lat, s_long, nearest_start_node, nearest_end_node, si_os_map):
     key = f"{s_lat},{s_long}"

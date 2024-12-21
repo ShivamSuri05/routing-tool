@@ -1,7 +1,7 @@
 from functions.get_edges_and_nodes import get_nearest_edge, get_nearest_edge_data
-from functions.utils import generate_nearby_points, get_assumed_nearest_edges, add_update_b_data_object
+from functions.utils import generate_nearby_points, get_assumed_nearest_edges, add_update_b_data_object, add_to_map, update_to_map
 
-def add_bund_in_edge(graph, b_lat, b_long, condition_score, load_index, b_type, dict_object):
+def add_bund_in_edge(graph, b_lat, b_long, condition_score, load_index, b_type, dict_object, bd_os_map):
     nearest_edge = get_nearest_edge(graph, b_lat, b_long, True)
     if (nearest_edge[1] > 0.0002): #point does not lie on the edge
         print("Point does not lie on the edge")
@@ -22,6 +22,8 @@ def add_bund_in_edge(graph, b_lat, b_long, condition_score, load_index, b_type, 
         "type": b_type
     }
 
+    add_to_map(b_lat, b_long, nearest_start_node, nearest_end_node, bd_os_map)
+
     if(oneway_flag==True):
         assumed_pts = generate_nearby_points(b_lat, b_long, radius_to_the_point)
         nearest_edges_list = [get_nearest_edge(graph, assumed_pt[0], assumed_pt[1]) for assumed_pt in assumed_pts]
@@ -35,6 +37,7 @@ def add_bund_in_edge(graph, b_lat, b_long, condition_score, load_index, b_type, 
             #print("assumed_nearest_end_node:",assumed_nearest_end_node)
             #print("Node data1",graph.nodes[assumed_nearest_start_node])
             #print("Node data2",graph.nodes[assumed_nearest_end_node])
+            update_to_map(b_lat, b_long, assumed_nearest_start_node, assumed_nearest_end_node, bd_os_map)
             add_update_b_data_object(
                 assumed_nearest_start_node,
                 assumed_nearest_end_node,

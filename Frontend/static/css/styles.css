@@ -1,0 +1,134 @@
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: white;
+  border-bottom: 2px solid #ddd;
+  justify-content: flex-end;  
+}
+
+header .auth-buttons button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: indigo;
+  color: white;
+}
+
+.title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  margin: 20px 0;
+  color: indigo;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: indigo; /* Background for the bar */
+  padding: 0;
+  margin: 15px 0;
+}
+
+.steps div {
+  flex: 1; /* Each section takes equal width */
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative; /* For the vertical lines */
+  padding: 10px 0; /* Adjust vertical spacing */
+  transition: background-color 0.3s ease;
+}
+
+.steps div:hover {
+  background-color: rgb(134, 63, 248); /* Highlight color on hover */
+}
+
+.steps div:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background-color: white; /* Vertical line */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.indigo-input {
+  padding: 5px 10px; 
+  background-color: indigo; 
+  color: white;
+  font-size: 14px; 
+  width: 120px;
+  box-sizing: border-box; 
+  text-align: center;
+}
+
+.table {
+  width: 45%;
+  white-space: nowrap;
+}
+
+.icon-image {
+  width: 20px; 
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 8px; 
+}
+
+.table td {
+  padding: 5px; 
+  color: indigo;
+  vertical-align: middle; 
+  text-align: left; 
+  width: 1px;
+  white-space: nowrap; 
+}
+.table tr {
+  height: 40px; /* Adjust as needed for consistent row height */
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+
+}
+
+.searchReset {
+  background-color: indigo;
+}
+
+.map-section {
+  flex: 2;
+}
+
+.map {
+  width : 2
+}

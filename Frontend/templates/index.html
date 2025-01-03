@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Route Planner</title>
+  <script src="../static/js/home.js"></script>
+  <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="auth-buttons">
+      <button class="signup">SIGN UP</button>
+      <button class="login">LOGIN</button>
+    </div>
+  </header>
+  <div class="title">Routing Tool</div>
+  <div class="steps">
+    <div class="overview" onclick="OnOverviewClick()">Overview</div>
+    <div class="information" onclick="OnInformationClick()">Information</div>
+    <div class="contact" onclick="OnContactClick()">Contact Us</div>
+    <div class="help" onclick="OnHelpClick()">Help</div>
+  </div>
+  <div class="container">
+
+        <table class="table">
+            <tr>
+                <td>
+                    <img src="../static/images/indigo_pin.jpg" alt="Start Icon" class="icon-image">Start
+                </td>
+                <td>
+                    <input type="text" id="start" name="start" step="0.1" placeholder="Hamburg" value="Hamburg" class="indigo-input"></td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="../static/images/indigo_pin.jpg" alt="Start Icon" class="icon-image">Destination
+                </td>
+                <td>
+                    <input type="text" id="dest" name="dest" step="0.1" placeholder="Hamburg" value="Hamburg" class="indigo-input"></td>
+                </td>
+            </tr>
+            <tr>
+                <td>Height (m)</td>
+                <td><input type="number" id="height" name="height" step="0.1" value="4.5" placeholder="4.5" class="indigo-input"></td>
+            </tr>
+            <tr>
+                <td style="color:rgb(22, 121, 241);cursor: pointer;" onclick="AdvancedOptionsToggle()">Advanced options</td>
+            </tr>
+            <tr id="buffer-height-row" style="display: none;">
+                <td>Buffer Height (cm)</td>
+                <td><input type="number" id="buffer-height" name="buffer-height" step="1" value="10" placeholder="10" class="indigo-input"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center; padding-top: 20px;">
+                    <div class="buttons">
+                        <button class="searchReset">SEARCH</button>
+                        <button class="searchReset">RESET</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    <div class="map-section">
+      <div class="map">
+        <img src="../static/images/map.png" alt="Map">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

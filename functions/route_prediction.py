@@ -11,23 +11,26 @@ def load_graph(place_name, network_type='drive'):
     graph = ox.graph_from_place(place_name, network_type=network_type)
     return graph
 
-def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_height=450):
+def filter_graph_by_height(G, vehicle_height, permissible_height=450):
     """
-    Compute k-shortest paths using Yen's algorithm, with filtering for vehicle height.
+    Filter the graph by removing edges that do not meet the permissible height requirement.
     """
-
-    
-    # Add permissible height to each edge
     for u, v, data in G.edges(data=True):
         if isinstance(data, dict):
             data['permissible_height'] = permissible_height
 
-    # Remove invalid edges based on vehicle height
     invalid_edges = [
         (u, v) for u, v, data in G.edges(data=True)
         if isinstance(data, dict) and vehicle_height > data.get('permissible_height', float('inf'))
     ]
     G.remove_edges_from(invalid_edges)
+    return G
+
+def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_height=450):
+    """
+    Compute k-shortest paths using Yen's algorithm, with filtering for vehicle height.
+    """
+    G = filter_graph_by_height(G, vehicle_height, permissible_height)
 
     # Find the closest nodes to the start and end points
     start_node = ox.distance.nearest_nodes(G, X=start_point[1], Y=start_point[0])

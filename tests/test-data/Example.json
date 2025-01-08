@@ -1,0 +1,21 @@
+{
+   
+    "53.231234-9.672312" : 
+  {
+    "bund_lat": [52.123421, 53.123421],
+    "bund_long": [7.123421, 8.427429],
+    "condition_score": [2.2, 3.5],
+    "load_index": [5, 2],
+    "bridge_type": ["O", "U"],
+    "height": [430, 350]
+  },
+  "43.231234-19.672312" : 
+  {
+    "bund_lat": [53.123421],
+    "bund_long": [8.427429],
+    "condition_score": [2.2],
+    "load_index": [5],
+    "bridge_type": ["O"],
+    "height": [430]
+  }
+}

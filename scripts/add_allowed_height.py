@@ -1,9 +1,6 @@
 import osmnx as ox
 import json
 import os
-import sys 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from functions.save_retrieve_graph import save_graph_sample, use_saved_graph_sample
 
 def update_graph(graph, height_data, bridge_data):

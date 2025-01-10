@@ -120,6 +120,41 @@ body {
     color: white;
   
   }
+
+  #map {
+    height: 100%;
+    width: 100%;
+    border: 2px solid black;
+  }
+
+
+  #spinner-background {
+    display: none;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: #808080b8;
+    z-index: 100;
+  }
+
+  .spinner {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 8px solid #f3f3f3; /* Light gray */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
   
   .searchReset {
     background-color: indigo;
@@ -127,6 +162,7 @@ body {
   
   .map-section {
     flex: 2;
+    z-index: 0;
   }
   
   .map {

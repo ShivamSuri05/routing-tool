@@ -7,8 +7,13 @@
   <script src="/static/js/home.js"></script>
   <script src="/static/js/script.js" defer></script>
   <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 </head>
 <body>
+  <div id="spinner-background">
+    <div class="spinner" id="spinner"></div>
+  </div>
   <header>
     <div class="auth-buttons">
       <button class="signup">SIGN UP</button>
@@ -52,6 +57,10 @@
                 <td>Buffer Height (cm)</td>
                 <td><input type="number" id="buffer-height" name="buffer-height" placeholder="10" class="indigo-input"></td>
             </tr>
+            <tr id="num-paths-row" style="display: none;">
+              <td>Number of paths</td>
+              <td><input type="number" id="num-paths" name="num-paths" placeholder="1" value="1" class="indigo-input"></td>
+          </tr>
             <tr>
                 <td colspan="2" style="text-align: center; padding-top: 20px;">
                     <div class="buttons">
@@ -63,7 +72,8 @@
         </table>
     <div class="map-section">
       <div class="map">
-        <img src="../static/images/map.png" alt="Map">
+        <!--<img src="../static/images/map.png" alt="Map">-->
+        <div id="map" style="height: 500px;"></div>
       </div>
     </div>
   </div>

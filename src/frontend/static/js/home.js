@@ -5,6 +5,12 @@ function AdvancedOptionsToggle() {
     } else {
         bufferRow.style.display = "none"; // Hide the row
     }
+    const pathRow = document.getElementById("num-paths-row");
+    if (pathRow.style.display === "none" || pathRow.style.display === "") {
+        pathRow.style.display = "table-row"; // Show the row
+    } else {
+        pathRow.style.display = "none"; // Hide the row
+    }
 }
 
 function OnOverviewClick() {

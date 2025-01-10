@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, abort
 from src.backend.fetch_path import fetch_paths
 
 api = Blueprint('api', __name__)
@@ -18,5 +18,9 @@ def process_data():
 @api.route("/getRoute", methods=["POST"])
 def fetch_route():
     data = request.json
-    response = fetch_paths(data["start_city"], data["end_city"], data["height"], data["buffer_ht"])
+    print(data)
+    response = fetch_paths(data["start_city"], data["end_city"], data["height"], data["buffer_ht"], data["num_paths"])
+    if(response == "No Paths Found"):
+        abort(409)
+    
     return response

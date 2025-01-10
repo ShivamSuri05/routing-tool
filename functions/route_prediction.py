@@ -27,6 +27,10 @@ def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_hei
     # Find the closest nodes to the start and end points
     start_node = ox.distance.nearest_nodes(G, X=start_point[1], Y=start_point[0])
     end_node = ox.distance.nearest_nodes(G, X=end_point[1], Y=end_point[0])
+    #print("Start Node: ", start_node)
+    #print("End Node: ", end_node)
+    #print("Node data1",G.nodes[start_node])
+    #print("Node data2",G.nodes[end_node])
 
     # Find the k-shortest paths
     paths = []

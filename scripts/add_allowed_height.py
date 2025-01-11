@@ -4,10 +4,7 @@ import os
 from functions.save_retrieve_graph import save_graph_sample, use_saved_graph_sample
 
 
-def update_graph(graph, height_data, bridge_data):
-    
-    condition_score_threshold = 3
-    load_index_threshold = 2
+def update_graph(graph, height_data, bridge_data, condition_score_threshold, load_index_threshold):
     
     for key, value in height_data.items():
         # Extract nodes
@@ -50,6 +47,9 @@ def update_graph(graph, height_data, bridge_data):
 
 if __name__ == "__main__":
     
+    condition_score_threshold = 3
+    load_index_threshold = 2
+    
     print("Adding height and bridge constraints in the graph")
     
     # Get the path of the current script
@@ -68,5 +68,5 @@ if __name__ == "__main__":
         bridges_path = json.load(file)
 
 
-    update_graph(graph, height_path, bridges_path)
+    update_graph(graph, height_path, bridges_path, condition_score_threshold, load_index_threshold)
     print("Script ran successfully")

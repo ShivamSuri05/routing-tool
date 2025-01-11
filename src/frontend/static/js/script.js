@@ -41,16 +41,15 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
         body: JSON.stringify(body_data)
     })
 
-    spinner.style.display = 'none';
-    spinner_background.style.display = 'none';
-    
     if(response.status == 409){
-        alert("No Path Found for desired vehicle height");
+        alert(response.message);
     }
     else {
         markersGroup.clearLayers();
         const paths = await response.json();
         console.log(paths)
+        spinner.style.display = 'none';
+        spinner_background.style.display = 'none';
 
         var bounds = [];
         var colors = ['blue', 'green', 'black', 'yellow', 'red']

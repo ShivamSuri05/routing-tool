@@ -12,7 +12,7 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
     height = convert_to_float(height)
     num_paths = int(num_paths)
     print(start_point, end_point, height, buffer_height)
-    valid_filepath = "data/germany.graphml"
+    valid_filepath = "data/autobahns_germany_with_restrictions.graphml"
     loaded_graph = use_saved_graph_sample(valid_filepath)
     try:
         paths = get_all_routes(loaded_graph, start_point, end_point, num_paths , buffer_height+height)

@@ -8,7 +8,7 @@ def create_height_edge_database():
     columns_to_fetch = ['Lat_CORR', 'Long_CORR', 'Hauteur_Droite_cm']
     s_data = get_excel_data(filepath, columns_to_fetch)
 
-    graph_filepath = "data/germany.graphml"
+    graph_filepath = "data/autobahns_germany.graphml"
     graph = use_saved_graph_sample(graph_filepath)
     height_obj = {}
     si_os_map = {}

@@ -7,11 +7,11 @@ def filter_graph_by_height(G, vehicle_height):
     """
     Filter the graph by removing edges that do not meet the permissible height requirement.
     """
-
-    invalid_edges = [
-        (u, v) for u, v, data in G.edges(data=True)
-        if isinstance(data, dict) and vehicle_height > data.get('allowed_height', float('inf'))
-    ]
+    invalid_edges = []
+    for u, v, data in G.edges(data=True):
+        if 'allowed_height' in data:
+            if vehicle_height > int(data['allowed_height']):
+                invalid_edges.append((u, v))
     G.remove_edges_from(invalid_edges)
     return G
 

@@ -5,7 +5,7 @@ def fetch_germany_graph():
     place_name = "Germany"
     graph = get_graph_from_place(place_name)
 
-    graph_filepath = "data/germany.graphml"
+    graph_filepath = "data/autobahns_germany.graphml"
 
     result = save_graph_sample(graph, graph_filepath)
 

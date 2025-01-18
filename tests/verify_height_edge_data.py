@@ -1,7 +1,7 @@
 from functions.get_edges_and_nodes import get_nearest_edge_data
 from functions.save_retrieve_graph import use_saved_graph_sample
 
-valid_filepath = "data/germany.graphml"
+valid_filepath = "data/autobahns_germany.graphml"
 loaded_graph = use_saved_graph_sample(valid_filepath)
 node1 = 480764
 node2 = 3075304544

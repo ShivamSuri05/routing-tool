@@ -86,3 +86,9 @@ def update_to_map(s_lat, s_long, nearest_start_node, nearest_end_node, si_os_map
     key = f"{s_lat},{s_long}"
     value = f"{nearest_start_node},{nearest_end_node}"
     si_os_map[key].append(value)
+
+def convert_to_float(value):
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        return None

@@ -8,7 +8,7 @@ def create_bund_edge_database():
     columns_to_fetch = ['condition_score', 'load_index', 'type', 'latitude', 'longitude']
     b_data = get_excel_data(filepath, columns_to_fetch)
 
-    graph_filepath = "data/germany.graphml"
+    graph_filepath = "data/autobahns_germany.graphml"
     graph = use_saved_graph_sample(graph_filepath)
     bund_obj = {}
     start_idx = 10000  # Example start index

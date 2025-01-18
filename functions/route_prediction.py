@@ -3,18 +3,15 @@ import networkx as nx
 from itertools import islice
 import heapq
 
-def filter_graph_by_height(G, vehicle_height, permissible_height=450):
+def filter_graph_by_height(G, vehicle_height):
     """
     Filter the graph by removing edges that do not meet the permissible height requirement.
     """
+    invalid_edges = []
     for u, v, data in G.edges(data=True):
-        if isinstance(data, dict):
-            data['permissible_height'] = permissible_height
-
-    invalid_edges = [
-        (u, v) for u, v, data in G.edges(data=True)
-        if isinstance(data, dict) and vehicle_height > data.get('permissible_height', float('inf'))
-    ]
+        if 'allowed_height' in data:
+            if vehicle_height > int(data['allowed_height']):
+                invalid_edges.append((u, v))
     G.remove_edges_from(invalid_edges)
     return G
 
@@ -22,11 +19,15 @@ def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_hei
     """
     Compute k-shortest paths using Yen's algorithm, with filtering for vehicle height.
     """
-    G = filter_graph_by_height(G, vehicle_height, permissible_height)
+    G = filter_graph_by_height(G, vehicle_height)
 
     # Find the closest nodes to the start and end points
     start_node = ox.distance.nearest_nodes(G, X=start_point[1], Y=start_point[0])
     end_node = ox.distance.nearest_nodes(G, X=end_point[1], Y=end_point[0])
+    #print("Start Node: ", start_node)
+    #print("End Node: ", end_node)
+    #print("Node data1",G.nodes[start_node])
+    #print("Node data2",G.nodes[end_node])
 
     # Find the k-shortest paths
     paths = []

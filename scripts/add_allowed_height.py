@@ -14,9 +14,13 @@ def update_graph(graph, height_data, bridge_data, condition_score_threshold, loa
         allowed_height = value['real_height'] if value['real_height'] != 10000 else value['assumed_height']
         # Update the edge property
         if graph.has_edge(node1, node2):
-            graph[node1][node2][0]['allowed_height'] = allowed_height
-        elif graph.has_edge(node2, node1):  # Check for reverse direction
-            graph[node2][node1][0]['allowed_height'] = allowed_height
+            for k in graph[node1][node2]:
+                graph[node1][node2][k]['allowed_height'] = allowed_height
+            #print(graph[node1][node2])
+        #elif graph.has_edge(node2, node1):  # Check for reverse direction
+        #    graph[node2][node1][0]['allowed_height'] = allowed_height
+        #print(graph[node1][node2])
+        #process.exit()
 
     # Update edges with bridge constraints
     for key, value in bridge_data.items():
@@ -31,33 +35,31 @@ def update_graph(graph, height_data, bridge_data, condition_score_threshold, loa
             if condition_score > condition_score_threshold or load_index > load_index_threshold:
                 graph.remove_edge(node1, node2)
             else:
-                graph[node1][node2][0]['condition_score'] = condition_score
-                graph[node1][node2][0]['load_index'] = load_index
-        elif graph.has_edge(node2, node1):  # Check for reverse direction
+                for k in graph[node1][node2]:
+                    graph[node1][node2][k]['condition_score'] = condition_score
+                    graph[node1][node2][k]['load_index'] = load_index
+    """    elif graph.has_edge(node2, node1):  # Check for reverse direction
             if condition_score > condition_score_threshold or load_index > load_index_threshold:
                 graph.remove_edge(node2, node1)
             else:
                 graph[node2][node1][0]['condition_score'] = condition_score
                 graph[node2][node1][0]['load_index'] = load_index
-
-    BASE_PATH = os.getcwd()
-    output_path = os.path.join(BASE_PATH, "routing-tool", "data", "updated_graph.graphml")
+    """
+    
+    output_path = "data/autobahns_germany_with_restrictions.graphml"
     save_graph_sample(graph, output_path)
-    print("Graph updated and saved as 'updated_graph.graphml'")
+    print("Graph updated and saved in "+output_path)
 
 if __name__ == "__main__":
     
-    condition_score_threshold = 3
-    load_index_threshold = 2
+    condition_score_threshold = 4
+    load_index_threshold = 5
     
     print("Adding height and bridge constraints in the graph")
     
-    # Get the path of the current script
-    script_dir = os.path.dirname(__file__)
-    # Construct the path to the JSON file in the data folder
-    height_path = os.path.join(script_dir, 'edges_and_height.json')
-    bridges_path = os.path.join(script_dir, 'edges_and_bridges.json')
-    graph_path = os.path.join(script_dir, 'germany.graphml')
+    height_path = 'data/edges_and_height.json'
+    bridges_path = 'data/edges_and_bridges.json'
+    graph_path = 'data/autobahns_germany.graphml'
     graph = use_saved_graph_sample(graph_path)
 
     # Load the JSON file

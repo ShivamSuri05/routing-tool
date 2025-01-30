@@ -21,40 +21,40 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
         formatted_response = []
         for path in paths:
             path_list = []
-            for i in range(len(path) - 1): 
+
+            for i in range(len(path) - 1):
                 node1 = path[i]
                 node2 = path[i + 1]
-                
+
                 edge_data = get_nearest_edge_data(loaded_graph, node1, node2)
-                geometry_coordinates = str(edge_data[0].geometry)
-                coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
-                coordinate_pairs = coordinates_str.split(", ")
-                coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
-                coor_rev = []
-                for coor in coordinates_list:
-                    tup = (coor[1],coor[0])
-                    coor_rev.append(tup)
-                
                 coord1 = (loaded_graph.nodes[node1]['y'], loaded_graph.nodes[node1]['x'])
-            
-                path_list.append([node1, coord1])  
-                # Append the geometry coordinates
-                for point in coor_rev:  
-                    path_list.append(point)
-                    
+                path_list.append([node1, coord1])  # Always append the starting node
                 
-            
-            # Append the last node with its coordinates and no adjacent node
+                if 'geometry' in edge_data:
+                    geometry_coordinates = str(edge_data[0].geometry)
+                    print("geometry_coordinates:", geometry_coordinates)
+
+                    # Extract coordinates from LINESTRING format
+                    coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
+                    coordinate_pairs = coordinates_str.split(", ")
+                    coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
+
+                    # Convert to (latitude, longitude) and append each point
+                    for coor in coordinates_list:
+                        path_list.append((coor[1], coor[0]))  # Swap to (lat, lon)
+
+                else:
+                    print(f"No geometry data for edge {node1} -> {node2}")
+
+            # Append the last node in the path
             last_node = path[-1]
             coord_last = (loaded_graph.nodes[last_node]['y'], loaded_graph.nodes[last_node]['x'])
-            path_list.append([last_node, coord_last, None])  # No geometry for the last node
-            
-            
-            print("Path List",path_list)
+            path_list.append([last_node, coord_last])  # Append the last node
             
             formatted_response.append(path_list)
-        
-        
-        return (formatted_response)
-    except (ValueError, TypeError):
+
+        return formatted_response
+
+    except (ValueError, TypeError) as e:
+        print(f"Error: {e}")
         return "No Paths Found"

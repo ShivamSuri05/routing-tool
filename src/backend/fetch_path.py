@@ -28,31 +28,31 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
 
                 edge_data = get_nearest_edge_data(loaded_graph, node1, node2)
                 coord1 = (loaded_graph.nodes[node1]['y'], loaded_graph.nodes[node1]['x'])
-                path_list.append([node1, coord1])  # Always append the starting node
+                if not path_list or path_list[-1] != coord1:
+                    path_list.append(coord1)  # Append only if not duplicate
                 
-                if 'geometry' in edge_data:
-                    geometry_coordinates = str(edge_data[0].geometry)
-                    print("geometry_coordinates:", geometry_coordinates)
+                if 'geometry' in edge_data[0]:
+                    geometry_coordinates = str(edge_data[0]['geometry'])
 
-                    # Extract coordinates from LINESTRING format
-                    coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
-                    coordinate_pairs = coordinates_str.split(", ")
-                    coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
+                # Extract coordinates from LINESTRING format
+                coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
+                coordinate_pairs = coordinates_str.split(", ")
+                coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
 
-                    # Convert to (latitude, longitude) and append each point
-                    for coor in coordinates_list:
-                        path_list.append((coor[1], coor[0]))  # Swap to (lat, lon)
-
+                # Convert to (latitude, longitude) and append each point
+                for coor in coordinates_list:
+                    path_list.append((coor[1], coor[0]))  # Swap to (lat, lon)
                 else:
                     print(f"No geometry data for edge {node1} -> {node2}")
 
-            # Append the last node in the path
+                
             last_node = path[-1]
             coord_last = (loaded_graph.nodes[last_node]['y'], loaded_graph.nodes[last_node]['x'])
-            path_list.append([last_node, coord_last])  # Append the last node
-            
+            path_list.append(coord_last)  # Append last node only if not duplicate
+            path_list = list(dict.fromkeys(path_list))
             formatted_response.append(path_list)
-
+            
+        print("formatted_response", formatted_response)
         return formatted_response
 
     except (ValueError, TypeError) as e:

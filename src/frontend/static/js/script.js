@@ -50,7 +50,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     else {
         markersGroup.clearLayers();
         const paths = await response.json();
-        console.log(paths)
+        //console.log(paths)
 
         var bounds = [];
         var colors = [
@@ -62,26 +62,27 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
 
             const startCoord = path[0];  // First coordinate
             const endCoord = path[path.length - 1];  // Last coordinate
-            console.log(startCoord,endCoord);
-            const polylineCoords = path.slice(1, -1).map(coords => [coords[1][0], coords[1][1]]); // All except first & last
-
+            //console.log(startCoord);
+            //console.log(endCoord);
+            //const polylineCoords = path.slice(1, -1).map(coords => [coords[1][0], coords[1][1]]); // All except first & last
+            const polylineCoords = path
             // Add Start Marker (Red)
-            L.marker([startCoord[1][0], startCoord[1][1]], { icon: createCustomIcon('red') })
+            L.marker([startCoord[0], startCoord[1]], { icon: createCustomIcon('red') })
                 .addTo(markersGroup)
-                .bindPopup(`Start Point<br>Node ID: ${startCoord[0]}<br>Latitude: ${startCoord[1][0]}<br>Longitude: ${startCoord[1][1]}`);
+                .bindPopup(`Start Point<br>Latitude: ${startCoord[0]}<br>Longitude: ${startCoord[1]}`);
 
             // Add End Marker (Green)
-            L.marker([endCoord[1][0], endCoord[1][1]], { icon: createCustomIcon('green') })
+            L.marker([endCoord[0], endCoord[1]], { icon: createCustomIcon('green') })
                 .addTo(markersGroup)
-                .bindPopup(`End Point<br>Node ID: ${endCoord[0]}<br>Latitude: ${endCoord[1][0]}<br>Longitude: ${endCoord[1][1]}`);
+                .bindPopup(`End Point<br>Latitude: ${endCoord[0]}<br>Longitude: ${endCoord[1]}`);
 
             // Add Polyline for intermediate points
             if (polylineCoords.length > 0) {
                 L.polyline(polylineCoords, { color: markerColor, weight: 4 }).addTo(markersGroup);
             }
 
-            bounds.push([startCoord[1][0], startCoord[1][1]]);
-            bounds.push([endCoord[1][0], endCoord[1][1]]);
+            bounds.push([startCoord[0], startCoord[1]]);
+            bounds.push([endCoord[0], endCoord[1]]);
         })
         
         if (bounds.length > 0) {

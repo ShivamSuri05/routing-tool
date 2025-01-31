@@ -1,7 +1,7 @@
 from functions.route_prediction import get_all_routes
 from functions.utils import convert_to_float
 from functions.save_retrieve_graph import use_saved_graph_sample
-
+from functions.get_edges_and_nodes import get_nearest_edge_data
 
 def fetch_paths(src, dst, height, buffer_height, num_paths):
     src = src.split(" ")
@@ -21,11 +21,40 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
         formatted_response = []
         for path in paths:
             path_list = []
-            for node in path:
-                coord = (loaded_graph.nodes[node]['y'], loaded_graph.nodes[node]['x'])
-                path_list.append([node, coord])
+
+            for i in range(len(path) - 1):
+                node1 = path[i]
+                node2 = path[i + 1]
+
+                edge_data = get_nearest_edge_data(loaded_graph, node1, node2)
+                coord1 = (loaded_graph.nodes[node1]['y'], loaded_graph.nodes[node1]['x'])
+                if not path_list or path_list[-1] != coord1:
+                    path_list.append(coord1)  # Append only if not duplicate
+                
+                if 'geometry' in edge_data[0]:
+                    geometry_coordinates = str(edge_data[0]['geometry'])
+
+                # Extract coordinates from LINESTRING format
+                coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
+                coordinate_pairs = coordinates_str.split(", ")
+                coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
+
+                # Convert to (latitude, longitude) and append each point
+                for coor in coordinates_list:
+                    path_list.append((coor[1], coor[0]))  # Swap to (lat, lon)
+                else:
+                    print(f"No geometry data for edge {node1} -> {node2}")
+
+                
+            last_node = path[-1]
+            coord_last = (loaded_graph.nodes[last_node]['y'], loaded_graph.nodes[last_node]['x'])
+            path_list.append(coord_last)  # Append last node only if not duplicate
+            path_list = list(dict.fromkeys(path_list))
             formatted_response.append(path_list)
-        
-        return (formatted_response)
-    except (ValueError, TypeError):
+            
+        print("formatted_response", formatted_response)
+        return formatted_response
+
+    except (ValueError, TypeError) as e:
+        print(f"Error: {e}")
         return "No Paths Found"

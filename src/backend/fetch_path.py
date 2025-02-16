@@ -12,12 +12,12 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
     height = convert_to_float(height)
     num_paths = int(num_paths)
     print(start_point, end_point, height, buffer_height)
-    valid_filepath = "data/autobahns_germany_with_restrictions.graphml"
+    valid_filepath = "data/autobahns_germany_with_restrictions_v1.graphml"
     loaded_graph = use_saved_graph_sample(valid_filepath)
     try:
         paths = get_all_routes(loaded_graph, start_point, end_point, num_paths , buffer_height+height)
         #paths = [[93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 11981293, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043438, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573261, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 110057419, 2887358771, 21424636]]
-        print(paths)
+        #print(paths)
         formatted_response = []
         for path in paths:
             path_list = []
@@ -27,7 +27,12 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
                 node2 = path[i + 1]
 
                 edge_data = get_nearest_edge_data(loaded_graph, node1, node2)
-                coord1 = (loaded_graph.nodes[node1]['y'], loaded_graph.nodes[node1]['x'])
+                u_bridge_flag = 0
+                if 'bridge' in edge_data[0]:
+                    if 'allowed_height' not in edge_data[0] or 'assumed_flag' in edge_data[0]:
+                        u_bridge_flag = 1
+
+                coord1 = (loaded_graph.nodes[node1]['y'], loaded_graph.nodes[node1]['x'],i,u_bridge_flag)
                 if not path_list or path_list[-1] != coord1:
                     path_list.append(coord1)  # Append only if not duplicate
                 
@@ -41,18 +46,18 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
 
                 # Convert to (latitude, longitude) and append each point
                 for coor in coordinates_list:
-                    path_list.append((coor[1], coor[0]))  # Swap to (lat, lon)
+                    path_list.append((coor[1], coor[0],i,u_bridge_flag))  # Swap to (lat, lon)
                 else:
                     print(f"No geometry data for edge {node1} -> {node2}")
 
                 
             last_node = path[-1]
-            coord_last = (loaded_graph.nodes[last_node]['y'], loaded_graph.nodes[last_node]['x'])
+            coord_last = (loaded_graph.nodes[last_node]['y'], loaded_graph.nodes[last_node]['x'],len(path),0)
             path_list.append(coord_last)  # Append last node only if not duplicate
             path_list = list(dict.fromkeys(path_list))
             formatted_response.append(path_list)
             
-        print("formatted_response", formatted_response)
+        #print("formatted_response", formatted_response)
         return formatted_response
 
     except (ValueError, TypeError) as e:

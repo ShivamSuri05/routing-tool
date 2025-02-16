@@ -1,8 +1,28 @@
-console.log("Hello World")
+
 var map = L.map('map').setView([51.1657, 10.4515], 6);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
 }).addTo(map);
+let locationMarker = null;
+
+map.on('click', function(e) {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+
+    if (locationMarker) {
+        map.removeLayer(locationMarker);
+    }
+
+    locationMarker = L.marker([lat, lng]).addTo(map)
+        .bindPopup(`<strong>Latitude:</strong> ${lat}<br><strong>Longitude:</strong> ${lng}`)
+        .openPopup();
+
+    locationMarker.on('popupclose', function() {
+        map.removeLayer(locationMarker);
+        locationMarker = null;
+    });
+});
+
 var markersGroup = L.layerGroup().addTo(map);
 
 function createCustomIcon(color) {
@@ -12,6 +32,30 @@ function createCustomIcon(color) {
         iconAnchor: [12, 25],
         popupAnchor: [1, -34]
     });
+}
+
+function groupAndFilter(arr) {
+    const grouped = {};
+
+    // Step 1: Group by the third index
+    arr.forEach(item => {
+        const key = item[2]; // Grouping key (3rd index)
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(item);
+    });
+
+    console.log(grouped)
+
+    // Step 2: Filter each group to keep only items where the 4th index is 1
+    const result = Object.values(grouped).map(group => group.filter(item => item[3] === 1));
+    console.log(result)
+
+    return result.filter(group => group.length > 0); // Remove empty groups
+}
+
+function removeDuplicateSubarrays(arr) {
+    const unique = new Set(arr.map(JSON.stringify)); // Convert subarrays to strings and store in a Set
+    return Array.from(unique, JSON.parse); // Convert back to arrays
 }
 
 document.getElementById('dataForm').addEventListener('click', async (event) => {
@@ -54,7 +98,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
 
         var bounds = [];
         var colors = [
-            'blue', 'green', 'black', 'yellow', 'red', 'purple', 'orange', 'pink', 
+            'blue', 'green', 'black', 'yellow', 'purple', 'orange', 'pink', 
             'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'gold', 'gray'
         ];
         paths.forEach((path, pathIndex) => {
@@ -65,7 +109,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
             //console.log(startCoord);
             //console.log(endCoord);
             //const polylineCoords = path.slice(1, -1).map(coords => [coords[1][0], coords[1][1]]); // All except first & last
-            const polylineCoords = path
+            const polylineCoords = removeDuplicateSubarrays(path.map(item => item.slice(0,2)));
             // Add Start Marker (Red)
             L.marker([startCoord[0], startCoord[1]], { icon: createCustomIcon('red') })
                 .addTo(markersGroup)
@@ -77,9 +121,54 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
                 .bindPopup(`End Point<br>Latitude: ${endCoord[0]}<br>Longitude: ${endCoord[1]}`);
 
             // Add Polyline for intermediate points
+            let tempMarker = null;
             if (polylineCoords.length > 0) {
-                L.polyline(polylineCoords, { color: markerColor, weight: 4 }).addTo(markersGroup);
+                const poly = L.polyline(polylineCoords, { color: markerColor, weight: 4 }).addTo(markersGroup);
+                poly.on('click', function(e) {
+                    const lat = e.latlng.lat;
+                    const lng = e.latlng.lng;
+                    
+                    if (tempMarker) {
+                        map.removeLayer(tempMarker);
+                    }
+            
+                    // Optionally, add a marker at the clicked point
+                    tempMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup(`Latitude: ${lat} <br>Longitude: ${lng}`)
+                        .openPopup();
+                    
+                    tempMarker.on('popupclose', function() {
+                        map.removeLayer(tempMarker);
+                        tempMarker = null;
+                    });
+                });
             }
+            
+            const notMeasuredPaths = groupAndFilter(path);
+            
+            let mtempMarker = null;
+            notMeasuredPaths.forEach((mpath)=>{
+                polymcoords = removeDuplicateSubarrays(mpath.map(item => item.slice(0,2)));
+                const mpoly = L.polyline(polymcoords, {color: 'red', weight: 6}).addTo(markersGroup);
+                
+                mpoly.on('click', function(e) {
+                    const lat = e.latlng.lat;
+                    const lng = e.latlng.lng;
+
+                    if (mtempMarker) {
+                        map.removeLayer(mtempMarker);
+                    }
+            
+                    mtempMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup(`Latitude: ${lat} <br>Longitude: ${lng}`)
+                        .openPopup();
+                    
+                    mtempMarker.on('popupclose', function() {
+                        map.removeLayer(mtempMarker);
+                        mtempMarker = null;
+                    });
+                });
+            })
 
             bounds.push([startCoord[0], startCoord[1]]);
             bounds.push([endCoord[0], endCoord[1]]);

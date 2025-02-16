@@ -12,10 +12,15 @@ def update_graph(graph, height_data, bridge_data, condition_score_threshold, loa
         
         # Determine the allowed height
         allowed_height = value['real_height'] if value['real_height'] != 10000 else value['assumed_height']
+        assumed_flag = 0
+        if(value['real_height'] == 10000 and value['assumed_height']):
+            assumed_flag = 1
         # Update the edge property
         if graph.has_edge(node1, node2):
             for k in graph[node1][node2]:
                 graph[node1][node2][k]['allowed_height'] = allowed_height
+                if (assumed_flag == 1):
+                    graph[node1][node2][k]['assumed_flag'] = 1
             #print(graph[node1][node2])
         #elif graph.has_edge(node2, node1):  # Check for reverse direction
         #    graph[node2][node1][0]['allowed_height'] = allowed_height
@@ -46,7 +51,7 @@ def update_graph(graph, height_data, bridge_data, condition_score_threshold, loa
                 graph[node2][node1][0]['load_index'] = load_index
     """
     
-    output_path = "data/autobahns_germany_with_restrictions.graphml"
+    output_path = "data/autobahns_germany_with_restrictions_v1.graphml"
     save_graph_sample(graph, output_path)
     print("Graph updated and saved in "+output_path)
 

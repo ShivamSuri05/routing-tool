@@ -58,14 +58,51 @@ function removeDuplicateSubarrays(arr) {
     return Array.from(unique, JSON.parse); // Convert back to arrays
 }
 
+function populateDropdown(dropdown, data) {
+    dropdown.innerHTML = '';  
+    const defaultOption = document.createElement('option');
+    defaultOption.text = 'Select a city';
+    defaultOption.value = '';
+    dropdown.appendChild(defaultOption);
+
+    
+    data.forEach(function(pair) {
+        const name = pair[0];
+        const coord = pair[1];
+
+        const option = document.createElement('option');
+        option.value = coord; 
+        option.text = name;  
+        dropdown.appendChild(option);
+    });
+    console.log(dropdown.value)
+}
+
+
 document.getElementById('dataForm').addEventListener('click', async (event) => {
     event.preventDefault();
 
-    const start_city = document.getElementById('start').value;
-    const end_city = document.getElementById('dest').value;
+    const start_city = document.getElementById('start_dropdown');
+    const end_city = document.getElementById('end_dropdown');
     const height = document.getElementById('height').value;
     const buffer_ht = document.getElementById('buffer-height').value;
     const num_paths = document.getElementById('num-paths').value;
+
+    fetch('/dropdown_data')
+    .then(response => response.json())
+    .then(data => { 
+        populateDropdown(startDropdown, data.start_name_coord_pairs);
+        populateDropdown(endDropdown, data.end_name_coord_pairs);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+
+    startDropdown.addEventListener('change', function() {
+        document.getElementById('start').value = ''; 
+    });
+    endDropdown.addEventListener('change', function() {
+        document.getElementById('dest').value = '';   
+    });
+
     let body_data = {
         start_city: start_city,
         end_city: end_city,

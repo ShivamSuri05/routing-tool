@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, abort
 from src.backend.fetch_path import fetch_paths
+import time
 
 api = Blueprint('api', __name__)
 
@@ -19,7 +20,10 @@ def process_data():
 def fetch_route():
     data = request.json
     print(data)
+    startTime = time.time()
     response = fetch_paths(data["start_city"], data["end_city"], data["height"], data["buffer_ht"], data["num_paths"])
+    endTime = time.time()
+    print(f"Time taken: {endTime - startTime:.3f} seconds")
     if(response == "No Paths Found"):
         abort(409)
     

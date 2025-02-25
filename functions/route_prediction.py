@@ -38,6 +38,11 @@ def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_hei
     attempt = 0  # Keeps track of iterations to avoid infinite loops
     max_attempts = k * 2  # Allow some extra attempts to get `k` paths
 
+    candidate_paths = []
+    heapq.heapify(candidate_paths)
+
+    graph_temp = []
+
     while len(paths) < k and attempt < max_attempts:
         attempt += 1
         G_temp = G.copy()  # Reset graph for each attempt
@@ -46,20 +51,20 @@ def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_hei
         path_length = len(paths[-1])
 
         # Define multiple sections for edge removal
-        removal_sections = [
-            (int(0.2 * path_length), int(0.3 * path_length)),
-            (int(0.35 * path_length), int(0.45 * path_length)),
-            (int(0.55 * path_length), int(0.65 * path_length)),
-            (int(0.70 * path_length), int(0.80 * path_length))
-        ]
+        removal_sections = []
 
-        candidate_paths = []
-        heapq.heapify(candidate_paths)
+        for idx in range(5, 85, 5):
+            start_idx = int(idx * path_length/100)
+            end_idx = int((idx+5) * path_length/100)
+            removal_sections.append((start_idx, end_idx))
+
 
         # Iterate over each segment separately
         for start_index, end_index in removal_sections:
             G_temp = G.copy()  # Reset graph before modifying a section
             nodes_to_remove = paths[-1][start_index:end_index]
+            if(len(graph_temp)):
+                G_temp = graph_temp[-1]
 
             # Remove edges related to the segment
             for j in range(len(nodes_to_remove) - 1):
@@ -69,15 +74,16 @@ def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_hei
             # Compute a new shortest path after this segment removal
             try:
                 new_path = nx.shortest_path(G_temp, source=start_node, target=end_node)
-                if new_path not in paths and new_path not in candidate_paths:
-                    heapq.heappush(candidate_paths, (len(new_path), new_path))
+                if new_path not in paths and all(new_path != path for _, path, _ in candidate_paths):
+                    heapq.heappush(candidate_paths, (len(new_path), new_path, G_temp))
             except nx.NetworkXNoPath:
                 continue  # If no path is found, move to the next segment
 
         # Select the best alternative path if available
         if candidate_paths:
-            _, new_path = heapq.heappop(candidate_paths)
+            _, new_path, rel_graph = heapq.heappop(candidate_paths)
             paths.append(new_path)
+            graph_temp.append(rel_graph)
 
     return paths
 

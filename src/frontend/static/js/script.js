@@ -94,7 +94,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     else {
         markersGroup.clearLayers();
         const paths = await response.json();
-        //console.log(paths)
+        console.log(paths)
 
         var bounds = [];
         var colors = [

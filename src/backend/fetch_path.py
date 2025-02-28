@@ -19,9 +19,10 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
         #paths = [[93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 11981293, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043438, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573261, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 110057419, 2887358771, 21424636]]
         #print(paths)
         formatted_response = []
+        lengths = []
         for path in paths:
             path_list = []
-
+            length_counter = 0
             for i in range(len(path) - 1):
                 node1 = path[i]
                 node2 = path[i + 1]
@@ -38,6 +39,8 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
                 
                 if 'geometry' in edge_data[0]:
                     geometry_coordinates = str(edge_data[0]['geometry'])
+                if 'length' in edge_data[0]:
+                    length_counter += float(edge_data[0]['length'])
 
                 # Extract coordinates from LINESTRING format
                 coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
@@ -49,7 +52,7 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
                     path_list.append((coor[1], coor[0],i,u_bridge_flag))  # Swap to (lat, lon)
                 else:
                     print(f"No geometry data for edge {node1} -> {node2}")
-
+            lengths.append(length_counter)
                 
             last_node = path[-1]
             coord_last = (loaded_graph.nodes[last_node]['y'], loaded_graph.nodes[last_node]['x'],len(path),0)
@@ -58,7 +61,7 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
             formatted_response.append(path_list)
             
         #print("formatted_response", formatted_response)
-        return formatted_response
+        return (formatted_response,lengths)
 
     except (ValueError, TypeError) as e:
         print(f"Error: {e}")

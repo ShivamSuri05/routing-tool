@@ -27,4 +27,4 @@ def fetch_route():
     if(response == "No Paths Found"):
         abort(409)
     
-    return response
+    return jsonify({"paths": response[0], "lengths": response[1]})

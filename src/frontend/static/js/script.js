@@ -64,15 +64,15 @@ function removeDuplicateSubarrays(arr) {
 document.getElementById('dataForm').addEventListener('click', async (event) => {
     event.preventDefault();
 
-    const start_city = document.getElementById('start');
-    const end_city = document.getElementById('dest');
+    const start_city = document.getElementById('start').value;
+    const end_city = document.getElementById('dest').value;
     const height = document.getElementById('height').value;
     const buffer_ht = document.getElementById('buffer-height').value;
     const num_paths = document.getElementById('num-paths').value;
 
     let body_data = {
-        start_city: start_city.value,
-        end_city: end_city.value,
+        start_city: start_city,
+        end_city: end_city,
         height: height,
         buffer_ht: buffer_ht,
         num_paths: num_paths

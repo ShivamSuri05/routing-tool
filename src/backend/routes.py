@@ -24,7 +24,7 @@ def fetch_route():
     response = fetch_paths(data["start_city"], data["end_city"], data["height"], data["buffer_ht"], data["num_paths"])
     if(response == "No Paths Found"):
         abort(409)
-    return 
+    return response
 
 def read_excel():
     # Adjust the path to your Excel file

@@ -45,8 +45,8 @@ def get_locations():
 def dropdown_data():
     path1 = 'data/start_end_coordinates.xlsx'
     path2 = 'data/start_end_coordinates.xlsx'
-    df1 = pd.read_excel(path1, sheet_name='Sheet1')
-    df2 = pd.read_excel(path2, sheet_name='Sheet1')
+    df1 = pd.read_excel(path1, sheet_name='Sheet2')
+    df2 = pd.read_excel(path2, sheet_name='Sheet2')
     start_name_coord_pairs = df1[['start_name', 'start_coord']].dropna().values.tolist()
     end_name_coord_pairs = df2[['end_name', 'end_coord']].dropna().values.tolist()
     return jsonify({

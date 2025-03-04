@@ -48,13 +48,13 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
                     length_counter += float(edge_data[0]['length'])
 
                 # Extract coordinates from LINESTRING format
-                coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
-                coordinate_pairs = coordinates_str.split(", ")
-                coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
+                    coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
+                    coordinate_pairs = coordinates_str.split(", ")
+                    coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
 
                 # Convert to (latitude, longitude) and append each point
-                for coor in coordinates_list:
-                    path_list.append((coor[1], coor[0],i,u_bridge_flag))  # Swap to (lat, lon)
+                    for coor in coordinates_list:
+                        path_list.append((coor[1], coor[0],i,u_bridge_flag))  # Swap to (lat, lon)
                 else:
                     print(f"No geometry data for edge {node1} -> {node2}")
             lengths.append(length_counter)

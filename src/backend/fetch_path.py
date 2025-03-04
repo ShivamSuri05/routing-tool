@@ -42,10 +42,12 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
                 if not path_list or path_list[-1] != coord1:
                     path_list.append(coord1)  # Append only if not duplicate
                 
-                if 'geometry' in edge_data[0]:
-                    geometry_coordinates = str(edge_data[0]['geometry'])
                 if 'length' in edge_data[0]:
                     length_counter += float(edge_data[0]['length'])
+                
+                
+                if 'geometry' in edge_data[0]:
+                    geometry_coordinates = str(edge_data[0]['geometry'])
 
                 # Extract coordinates from LINESTRING format
                     coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")

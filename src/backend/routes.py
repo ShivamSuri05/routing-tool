@@ -19,7 +19,6 @@ def process_data():
 
 @api.route("/getRoute", methods=["POST"])
 def fetch_route():
-    print('before fetch')
     data = request.json
     print(data)
     startTime = time.time()

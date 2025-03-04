@@ -93,7 +93,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     spinner_background.style.display = 'none';
 
     if(response.status == 409){
-        alert(response.message);
+        alert("No Paths Found");
     }
     else {
         markersGroup.clearLayers();

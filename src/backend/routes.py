@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, abort
 from src.backend.fetch_path import fetch_paths
 import pandas as pd
+import time
 
 api = Blueprint('api', __name__)
 
@@ -21,10 +22,14 @@ def fetch_route():
     print('before fetch')
     data = request.json
     print(data)
+    startTime = time.time()
     response = fetch_paths(data["start_city"], data["end_city"], data["height"], data["buffer_ht"], data["num_paths"])
+    endTime = time.time()
+    print(f"Time taken: {endTime - startTime:.3f} seconds")
     if(response == "No Paths Found"):
         abort(409)
-    return response
+    
+    return jsonify({"paths": response[0], "lengths": response[1]})
 
 def read_excel():
     # Adjust the path to your Excel file

@@ -44,11 +44,11 @@ function groupAndFilter(arr) {
         grouped[key].push(item);
     });
 
-    console.log(grouped)
+    //console.log(grouped)
 
     // Step 2: Filter each group to keep only items where the 4th index is 1
     const result = Object.values(grouped).map(group => group.filter(item => item[3] === 1));
-    console.log(result)
+    //console.log(result)
 
     return result.filter(group => group.length > 0); // Remove empty groups
 }
@@ -97,8 +97,10 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     }
     else {
         markersGroup.clearLayers();
-        const paths = await response.json();
-        //console.log(paths)
+        const json_response = await response.json();
+        let paths = json_response.paths
+        let lengths = json_response.lengths.map(num => (num/1000).toFixed(2))
+        //console.log(lengths)
 
         var bounds = [];
         var colors = [
@@ -107,6 +109,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
         ];
         paths.forEach((path, pathIndex) => {
             let markerColor = colors[pathIndex % colors.length]; // Ensure color cycles if more paths exist
+            let pathLength = lengths[pathIndex]
 
             const startCoord = path[0];  // First coordinate
             const endCoord = path[path.length - 1];  // Last coordinate
@@ -129,6 +132,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
             if (polylineCoords.length > 0) {
                 const poly = L.polyline(polylineCoords, { color: markerColor, weight: 4 }).addTo(markersGroup);
                 poly.on('click', function(e) {
+                    L.DomEvent.stopPropagation(e)
                     const lat = e.latlng.lat;
                     const lng = e.latlng.lng;
                     
@@ -138,7 +142,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
             
                     // Optionally, add a marker at the clicked point
                     tempMarker = L.marker([lat, lng]).addTo(map)
-                        .bindPopup(`Latitude: ${lat} <br>Longitude: ${lng}`)
+                        .bindPopup(`<strong>Latitude:</strong> ${lat} <br><strong>Longitude:</strong> ${lng} <br><strong>Total Length of whole path:</strong> ${pathLength} kms`)
                         .openPopup();
                     
                     tempMarker.on('popupclose', function() {
@@ -164,7 +168,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
                     }
             
                     mtempMarker = L.marker([lat, lng]).addTo(map)
-                        .bindPopup(`Latitude: ${lat} <br>Longitude: ${lng}`)
+                        .bindPopup(`<strong>Latitude:</strong> ${lat} <br><strong>Longitude:</strong> ${lng}`)
                         .openPopup();
                     
                     mtempMarker.on('popupclose', function() {

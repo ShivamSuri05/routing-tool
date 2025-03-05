@@ -4,16 +4,16 @@ from functions.save_retrieve_graph import use_saved_graph_sample
 from functions.get_edges_and_nodes import get_nearest_edge_data
 
 def fetch_paths(src, dst, height, buffer_height, num_paths):
-    src = src.split(" ")
-    start_point = (convert_to_float(src[0]), convert_to_float(src[1]))
-    dst = dst.split(" ")
-    end_point = (convert_to_float(dst[0]), convert_to_float(dst[1]))
+    src = src.strip().split()
+    start_point = (convert_to_float(src[0]), convert_to_float(src[1]))    
+    dst = dst.strip().split()
+    end_point = (convert_to_float(dst[0]), convert_to_float(dst[1]))  
     buffer_height = convert_to_float(buffer_height)
     height = convert_to_float(height)
     num_paths = int(num_paths)
-    print(start_point, end_point, height, buffer_height)
     valid_filepath = "data/autobahns_germany_with_restrictions_v1.graphml"
     loaded_graph = use_saved_graph_sample(valid_filepath)
+
     try:
         paths = get_all_routes(loaded_graph, start_point, end_point, num_paths , buffer_height+height)
         #paths = [[93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 11981293, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043438, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573261, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 2887358771, 21424636], [93014209, 1594531855, 491164, 491179, 491180, 491213, 94170412, 491220, 5789574746, 510617, 94170191, 94170196, 491788, 94074641, 326893039, 94074560, 1384522839, 1659223892, 95966208, 11981282, 95966399, 253043428, 253043456, 253043400, 21573263, 30845029, 280763543, 249245581, 21424998, 21424650, 268273247, 110057419, 2887358771, 21424636]]
@@ -42,19 +42,21 @@ def fetch_paths(src, dst, height, buffer_height, num_paths):
                 if not path_list or path_list[-1] != coord1:
                     path_list.append(coord1)  # Append only if not duplicate
                 
-                if 'geometry' in edge_data[0]:
-                    geometry_coordinates = str(edge_data[0]['geometry'])
                 if 'length' in edge_data[0]:
                     length_counter += float(edge_data[0]['length'])
+                
+                
+                if 'geometry' in edge_data[0]:
+                    geometry_coordinates = str(edge_data[0]['geometry'])
 
                 # Extract coordinates from LINESTRING format
-                coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
-                coordinate_pairs = coordinates_str.split(", ")
-                coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
+                    coordinates_str = geometry_coordinates.replace("LINESTRING (", "").replace(")", "")
+                    coordinate_pairs = coordinates_str.split(", ")
+                    coordinates_list = [tuple(map(float, coord.split())) for coord in coordinate_pairs]
 
                 # Convert to (latitude, longitude) and append each point
-                for coor in coordinates_list:
-                    path_list.append((coor[1], coor[0],i,u_bridge_flag))  # Swap to (lat, lon)
+                    for coor in coordinates_list:
+                        path_list.append((coor[1], coor[0],i,u_bridge_flag))  # Swap to (lat, lon)
                 else:
                     print(f"No geometry data for edge {node1} -> {node2}")
             lengths.append(length_counter)

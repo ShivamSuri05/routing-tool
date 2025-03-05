@@ -58,6 +58,9 @@ function removeDuplicateSubarrays(arr) {
     return Array.from(unique, JSON.parse); // Convert back to arrays
 }
 
+
+
+
 document.getElementById('dataForm').addEventListener('click', async (event) => {
     event.preventDefault();
 
@@ -66,6 +69,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     const height = document.getElementById('height').value;
     const buffer_ht = document.getElementById('buffer-height').value;
     const num_paths = document.getElementById('num-paths').value;
+
     let body_data = {
         start_city: start_city,
         end_city: end_city,
@@ -89,7 +93,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     spinner_background.style.display = 'none';
 
     if(response.status == 409){
-        alert(response.message);
+        alert("No Paths Found");
     }
     else {
         markersGroup.clearLayers();

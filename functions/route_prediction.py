@@ -22,11 +22,10 @@ def get_all_routes(G, start_point, end_point, k, vehicle_height, permissible_hei
     Guarantees exactly `k` unique paths by adjusting edge removal dynamically.
     """
     G = filter_graph_by_height(G, vehicle_height)
-
     # Find the closest nodes to the start and end points
     start_node = ox.distance.nearest_nodes(G, X=start_point[1], Y=start_point[0])
     end_node = ox.distance.nearest_nodes(G, X=end_point[1], Y=end_point[0])
-
+   
     # Find the first shortest path
     paths = []
     try:

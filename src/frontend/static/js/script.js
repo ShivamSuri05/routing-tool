@@ -104,7 +104,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
 
         var bounds = [];
         var colors = [
-            'blue', 'green', 'black', 'yellow', 'purple', 'orange', 'pink', 
+            'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 
             'brown', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'gold', 'gray'
         ];
         paths.forEach((path, pathIndex) => {
@@ -131,6 +131,21 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
             let tempMarker = null;
             if (polylineCoords.length > 0) {
                 const poly = L.polyline(polylineCoords, { color: markerColor, weight: 4 }).addTo(markersGroup);
+                poly.on('mouseover', function(e) {
+                    poly.setStyle({
+                        color: 'black',  // Change color on hover
+                        weight: 8,     // Increase weight on hover
+                    });
+                });
+
+                // Reset path style on mouseout
+                poly.on('mouseout', function(e) {
+                    poly.setStyle({
+                        color: markerColor,  // Reset to original color
+                        weight: 4,           // Reset to original weight
+                    });
+                });
+                
                 poly.on('click', function(e) {
                     L.DomEvent.stopPropagation(e)
                     const lat = e.latlng.lat;
@@ -158,7 +173,21 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
             notMeasuredPaths.forEach((mpath)=>{
                 polymcoords = removeDuplicateSubarrays(mpath.map(item => item.slice(0,2)));
                 const mpoly = L.polyline(polymcoords, {color: 'red', weight: 6}).addTo(markersGroup);
-                
+                mpoly.on('mouseover', function(e) {
+                    mpoly.setStyle({
+                        color: 'yellow',  // Change color on hover
+                        weight: 8,        // Increase weight on hover
+                    });
+                });
+
+                // Reset path style on mouseout
+                mpoly.on('mouseout', function(e) {
+                    mpoly.setStyle({
+                        color: 'red',     // Reset to red color
+                        weight: 6,        // Reset to original weight
+                    });
+                });
+
                 mpoly.on('click', function(e) {
                     const lat = e.latlng.lat;
                     const lng = e.latlng.lng;

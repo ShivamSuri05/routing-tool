@@ -92,13 +92,7 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     spinner.style.display = 'none';
     spinner_background.style.display = 'none';
 
-    if(response_coordinates.status == 412){
-        alert("No Paths, Input is in wrong format");
-    }
-    if(response_numeric.status == 412){
-        alert("No Paths, Input is in wrong format");
-    }
-    if(response_integer.status == 412){
+    if(response.status == 412){
         alert("No Paths, Input is in wrong format");
     }
     if(response.status == 409){

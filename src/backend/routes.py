@@ -27,18 +27,14 @@ def fetch_route():
     startTime = time.time()
     response_coordinates = validate_coordinates(data["start_city"])
     response_coordinates = validate_coordinates(data["end_city"])
-    response_numeric = validate_numeric(data["buffer_ht"])
+    response_buffer = validate_numeric(data["buffer_ht"])
     response_numeric = validate_numeric(data["height"])
     response_integer = validate_integer(data["num_paths"])
+    if(response_coordinates == False or response_numeric == False or response_integer == False or response_buffer == False):
+        abort(412)
     response = fetch_paths(data["start_city"], data["end_city"], data["height"], data["buffer_ht"], data["num_paths"])
     endTime = time.time()
     print(f"Time taken: {endTime - startTime:.3f} seconds")
-    if(response_coordinates == "Input is in wrong format"):
-        abort(412)
-    if(response_numeric == "Input is in wrong format"):
-        abort(412)
-    if(response_integer == "Input is in wrong format"):
-        abort(412)
     if(response == "No Paths Found"):
         abort(409)
     

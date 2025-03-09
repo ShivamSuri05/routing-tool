@@ -92,6 +92,9 @@ document.getElementById('dataForm').addEventListener('click', async (event) => {
     spinner.style.display = 'none';
     spinner_background.style.display = 'none';
 
+    if(response.status == 412){
+        alert("No Paths, Input is in wrong format");
+    }
     if(response.status == 409){
         alert("No Paths Found");
     }

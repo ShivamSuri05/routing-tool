@@ -25,12 +25,12 @@ def fetch_route():
     data = request.json
     print(data)
     startTime = time.time()
-    response_coordinates = validate_coordinates(data["start_city"])
-    response_coordinates = validate_coordinates(data["end_city"])
+    response_start = validate_coordinates(data["start_city"])
+    response_end = validate_coordinates(data["end_city"])
     response_buffer = validate_numeric(data["buffer_ht"])
     response_numeric = validate_numeric(data["height"])
     response_integer = validate_integer(data["num_paths"])
-    if(response_coordinates == False or response_numeric == False or response_integer == False or response_buffer == False):
+    if(response_start == False or response_end == False or response_numeric == False or response_integer == False or response_buffer == False):
         abort(412)
     response = fetch_paths(data["start_city"], data["end_city"], data["height"], data["buffer_ht"], data["num_paths"])
     endTime = time.time()
